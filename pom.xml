@@ -48,8 +48,8 @@
 						<properties>
 							<maven.compiler.target>1.8</maven.compiler.target>
 							<maven.compiler.source>1.8</maven.compiler.source>
-							<anypoint.platform.client_id>00d1d56626214ae790ba3b120df9d09f</anypoint.platform.client_id>
-							<anypoint.platform.client_secret>9c17a30d68EB431Da8cE444bC2612056</anypoint.platform.client_secret>
+							<anypoint.platform.client_id>bd24a77484fe4827a283e40e9fafb02a</anypoint.platform.client_id>
+							<anypoint.platform.client_secret>0c6691a2E27042C082029075F93a98dE</anypoint.platform.client_secret>
 							<mule.env>${mule.env}</mule.env>
 						</properties>
 						<uri>https://anypoint.mulesoft.com</uri>
