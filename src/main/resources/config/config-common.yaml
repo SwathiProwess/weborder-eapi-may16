@@ -1,0 +1,12 @@
+# Common File to be use in All env
+application:
+  name: "iewc-weborder-eapi"
+milestone:
+  category: "LOG"
+  
+#logging info
+
+source: "iewc-user"
+target: "iewc-weborder-papi"
+requestMessage: "Received taxrequest from iewc user"
+responseMessage: "Response sent back to iewc user"

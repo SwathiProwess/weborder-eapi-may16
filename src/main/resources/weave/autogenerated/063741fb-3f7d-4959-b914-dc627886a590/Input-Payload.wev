@@ -1,0 +1,18 @@
+%dw 2.0
+
+type auto_063741fb_3f7d_4959_b914_dc627886a590_Input_Payload = {
+  searchparams: {
+    guesT_COUNTRY: String, 
+    shiP_TO: String, 
+    guesT_REGION: String, 
+    _?: Any
+  }, 
+  pagingOptions: {
+    pageNumber: Number, 
+    pageSize: Number, 
+    sortFields: Array<{      sortDirection: String,       fieldName: String,       precedence: Number,       _?: Any    }>, 
+    _?: Any
+  }, 
+  _?: Any
+}
+

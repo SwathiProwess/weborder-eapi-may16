@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="iewc-taxrequest-eapi-test-suite.xml" />
+	<munit:test name="iewc-weborder-eapi-mainTest" doc:id="f93c8aa5-99a8-49d9-a75c-093f8c05766a" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="88066592-5153-479f-a569-9238ff56d7d8" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-weborder-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="ba000b19-fb2a-4f01-8958-65a9cfc90106" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="iewc-weborder-eapi-main" doc:id="3b18d9d7-f007-4c83-8d7e-f184b7911e1b" name="iewc-weborder-eapi-main"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="iewc-weborder-eapi-consoleTest" doc:id="eb28a667-0ad0-4c22-a72d-281f0c093e15" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="b4510763-3277-46c5-8831-398c96c570a8" processor="apikit:console">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-weborder-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to iewc-taxrequest-eapi-console" doc:id="b15f8e4d-c38d-4cac-8835-cc69845bf8bb" name="iewc-weborder-eapi-console"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="iewc-weborder-eapi-test-suite-post:\weborder:application\json:iewc-weborder-eapi-configTest" doc:id="9a357e4e-5678-41e3-a6bf-a08cdd872d6c" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="bdc03c8f-3386-4ed1-98c9-1f447bb66738" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="60ce0fac-84a2-426c-80e3-6987e87b99a7" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://MunitFiles/response.dwl')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="9c641336-c7ae-4db9-ae46-94cfbedcb6b5" >
+				<munit:payload value="#[output application/json  --- readUrl('classpath://MunitFiles/request.dwl')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\tax_request:application\json:iewc-taxrequest-eapi-config" doc:id="17a9b3f8-83a2-4e4b-824a-e4d298ac61c9" name="post:\web_order:application\json:iewc-weborder-eapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="c115feea-7d08-4af4-8c5f-e449ab71c5a6" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/response.dwl'))]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:METHOD_NOT_ALLOWED" doc:id="03eae847-c1b1-4575-8306-2a84b20b51a0" description="Test" expectedErrorType="APIKIT:METHOD_NOT_ALLOWED">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="60c10674-049a-4d94-8f44-7e295003e7e2" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-weborder-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="1f818dac-4b81-4010-b264-8de54a62064b" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-weborder-eapi-main" doc:id="20f8804b-d8b5-4eea-854d-7dc3d29b74eb" name="iewc-weborder-eapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="6923fecb-31c0-45e2-8e33-402be911bd85" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/methodnotallowed.dwl'))]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:NOT_IMPLEMENTED" doc:id="a829f2eb-0537-451d-b558-48ee04dcf77f" description="Test" expectedErrorType="APIKIT:NOT_IMPLEMENTED" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="0205e299-c69a-48b2-b12e-57b17217ddc1" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-weborder-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="c8c9d19d-52e2-40c1-98d9-22a534d976c2" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-weborder-eapi-main" doc:id="9a88b985-9e9d-4c7a-b6d7-bbf0e8b42ab3" name="iewc-weborder-eapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="ea91c310-356b-4baf-842a-9e9b6525e525" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/notImplemented.dwl'))]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:UNSUPPORTED_MEDIA_TYPE" doc:id="bae8f9ce-a231-4412-9331-f1034df6b177" description="Test" expectedErrorType="APIKIT:UNSUPPORTED_MEDIA_TYPE" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a1d6959c-acf8-4f48-bce7-5488e00bc356" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-weborder-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="39d1f7b8-b732-4228-8e88-2ea76a24e14d" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="iewc-weborder-eapi-main" doc:id="3dd1587e-7c72-4b97-b2f6-ecae28a27c69" name="iewc-weborder-eapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="f20a1cbc-bae1-4e53-974b-fcd1aa853695" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/unsupportedMediaType.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:NOT_ACCEPTABLE" doc:id="6bb7d305-923a-4179-ba0e-c963e41a49c1" description="Test" expectedErrorType="APIKIT:NOT_ACCEPTABLE" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="9d567bda-ab6f-482c-96ca-c77511f57adc" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-weborder-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="074275f2-557e-4382-bc80-979af236adfa" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="iewc-weborder-eapi-main" doc:id="ca82cfa1-21a4-406c-958f-35b15a6994d3" name="iewc-weborder-eapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="d9305206-83ec-41fe-b508-e71d0a579a51" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/notAcceptable.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<!-- <munit:test name="HTTP:BAD_REQUEST" doc:id="f54da268-0813-4f62-84b6-7535cb039bf8" description="Test" expectedErrorType="HTTP:BAD_REQUEST">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="c871a304-09a4-4fbe-ac1b-ef4fe6f074c8" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="53e78b7a-e503-4e64-a620-7fdc556288f4" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="039fb457-d077-4b2d-ace0-8f8120465e08" >
+				<munit:payload value="#[output application/json  -&#45;&#45; readUrl('classpath://MunitFiles/request.dwl')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\tax_request:application\json:iewc-taxrequest-eapi-config" doc:id="d10c8e70-1b43-4470-89f5-cb7c9b69c8a4" name="post:\tax_request:application\json:iewc-taxrequest-eapi-config" />
+		</munit:execution>
+	</munit:test> -->
+	<munit:test name="APIKIT:BAD_REQUEST" doc:id="6445fbe4-2544-41bd-a83d-a4e2c28d9b10" description="Test" expectedErrorType="APIKIT:BAD_REQUEST" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="512add52-34fb-4cbf-93ad-895ec85d7b1c" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-weborder-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="f292bebf-0aa6-4aa2-a478-d2fee74f9f1b" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="iewc-weborder-eapi-main" doc:id="2d88bede-1e86-4802-8fd5-5084d8a32d94" name="iewc-weborder-eapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="6e9c087b-ca2f-47b8-a584-e20745f3010a" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/badRequest.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:NOT_FOUND" doc:id="200c0b37-6835-4d48-b93a-a23370b01d52" description="Test" expectedErrorType="APIKIT:NOT_FOUND" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="3b4355bd-5059-46c9-a449-b3a5dc7d6f8e" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-weborder-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="045ae8a1-e518-42ad-b6bd-9d10b4535132" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="iewc-weborder-eapi-main" doc:id="38753564-340c-4c2d-9f8f-22e1cdb3bf93" name="iewc-weborder-eapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="4cee8e16-71ba-4eae-89aa-2f9bd04ff16b" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/notFound.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SAP:CONNECTIVITY" doc:id="5b3771ff-a5b4-4449-a389-3fc5f7cdbe47" description="Test" expectedErrorType="SAP:CONNECTIVITY" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="ac9f473a-25c9-4efd-9e30-ef5293eb742d" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-weborder-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SAP:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="c230fce0-0cc6-4dfe-b330-cad97703cd81" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="iewc-weborder-eapi-main" doc:id="d2d11d06-96a4-459a-a1a4-8daf1304be4c" name="iewc-weborder-eapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="3561ab9a-9e21-4073-b8da-f3afca964153" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/sapConnectivity.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SAP:INVALID_INPUT" doc:id="5c29fdd8-855c-4215-a279-80faf97697d9" description="Test" expectedErrorType="SAP:INVALID_INPUT" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="3c5636ab-a980-435e-8bb5-b7d1366060aa" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-weborder-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SAP:INVALID_INPUT" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="a3a51041-dc8f-4263-a738-68c9e3f36ea9" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="iewc-weborder-eapi-main" doc:id="c0c818b1-0673-4ce1-8bf3-96fb8fb2875a" name="iewc-weborder-eapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="a9c5b291-1df1-4be4-9f99-a498cb693884" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/invalidInput.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="HTTP:CONNECTIVITY" doc:id="9ad9b45a-2316-4739-b3d4-7d4b66d4fe0c" description="Test" expectedErrorType="HTTP:CONNECTIVITY" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="85502794-55a2-4b63-9f4f-e603beb3aa9a" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-weborder-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="10f4a5e3-af75-41f8-9a25-1dcc5f52f226" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="iewc-weborder-eapi-main" doc:id="6e198abe-e394-495b-ac5c-a0ef322d791a" name="iewc-weborder-eapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="c078c5f2-c2f9-49e2-8f76-d119c33885aa" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/httpConnectivity.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SAP:INVALID_CACHE" doc:id="6a4c846e-0274-4dc8-9a67-11ef8d367e21" description="Test" expectedErrorType="SAP:INVALID_CACHE" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="35575658-ec6b-4f68-aadc-64cdc7893180" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-weborder-eapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SAP:INVALID_CACHE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="98437567-5a53-453e-b64e-a37472b57e78" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="iewc-weborder-eapi-main" doc:id="1ebf64e9-96b5-467e-b3c5-877de4cb2a2e" name="iewc-weborder-eapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="0e51ebf1-3342-4acf-aeb6-137f720dbb65" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/invalidCache.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+
+
+
+</mule>

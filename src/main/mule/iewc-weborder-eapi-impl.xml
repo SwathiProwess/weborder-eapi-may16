@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="iewc-weborder-eapi-subflow" doc:id="76320481-ab1d-4ddd-9115-8b0e9e2b9e04" >
+		<ee:transform doc:name="setInputPayloadVariable" doc:id="6ee05413-587c-4bdd-91a5-fa1de121a73d" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="get-order-log-received.dwl" variableName="inputPayload" />
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="logRequestRecieved" doc:id="5f13c196-01c4-4597-a706-c2cd08c628bd" name="mile-log:request-received" />
+		<http:request method="POST" doc:name="Request to papi " doc:id="60ce0fac-84a2-426c-80e3-6987e87b99a7" config-ref="HTTP_Request_configuration" path="${http.request.path}" sendCorrelationId="ALWAYS" >
+		</http:request>
+		<ee:transform doc:name="responseSent" doc:id="0c96f5c9-7919-45ca-946f-a0a51fe0f2b7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="get-order-log-sent.dwl" variableName="inputPayload" />
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="logRequestSent" doc:id="ca12a602-61fd-45c4-b4ed-d2141d1472a9" name="mile-log:request-sent" />
+	</sub-flow>
+</mule>

@@ -1,0 +1,16 @@
+%dw 2.0
+
+type auto_063741fb_3f7d_4959_b914_dc627886a590_Output_Payload = {
+  pagingInfo: {
+    totalRecords: Number, 
+    pageNumber: Number, 
+    pageSize: Number, 
+    sortFields: Array<{      sortDirection: String,       fieldName: String,       precedence: Number,       _?: Any    }>, 
+    _?: Any
+  }, 
+  success: Boolean, 
+  messages: Array<{    "type": String,     message: String,     _?: Any  }>, 
+  results: Array<{    materiaL_TAXRATE: Number,     servicE_TAXRATE: Number,     freighT_TAXRATE: Number,     _?: Any  }>, 
+  _?: Any
+}
+

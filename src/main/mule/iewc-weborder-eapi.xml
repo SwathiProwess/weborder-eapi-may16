@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+	
+	<flow name="iewc-weborder-eapi-main" doc:id="21f820d2-ee44-4f6b-842c-c225b92a2303">
+        <http:listener doc:name="Listener" doc:id="65208dc0-f034-470e-88b8-5dbc87322d0a" config-ref="HTTP_Listener_config" path="/api/*">
+			<http:response statusCode="#[vars.httpStatus default 200]" >
+				<http:headers ><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="#[vars.httpStatus default 200]">
+				<http:body ><![CDATA[#[payload]]]></http:body>
+				<http:headers ><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<ee:transform doc:name="IntialisationOfVariables" doc:id="dbbdfd90-4b2c-485e-b75c-d8ac77277b3d">
+            <ee:message />
+            <ee:variables>
+                <ee:set-variable variableName="correlationId"><![CDATA[if(!isEmpty(attributes.headers.correlationId)) attributes.headers.correlationId else correlationId]]></ee:set-variable>
+                <ee:set-variable variableName="httpMethod"><![CDATA[attributes.method]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <apikit:router config-ref="iewc-weborder-eapi-config" />
+        <error-handler ref="error-handler" />
+    </flow>
+    <flow name="iewc-weborder-eapi-console" doc:id="6fc37062-2a38-4d01-b9f1-018407aeae70">
+		<http:listener doc:name="Listener" doc:id="bd0dce1b-24db-48f5-8c93-c839accd10e6" path="/console/*" config-ref="HTTP_Listener_config">
+		<http:response statusCode="#[vars.httpStatus default 200]">
+<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+</http:response>
+<http:error-response statusCode="#[vars.httpStatus default 500]">
+<http:body><![CDATA[#[payload]]]></http:body>
+<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+</http:error-response>
+		</http:listener>
+		<apikit:console config-ref="iewc-weborder-eapi-config" />
+        <error-handler ref="error-handler" />
+    </flow>
+    <flow name="post:\web_order:application\json:iewc-weborder-eapi-config" doc:id="b72e06b1-26eb-49c4-b9f8-ea4d5cc2a238">
+        <flow-ref doc:name="callToiewc-weborder-eapi-subflow" doc:id="67024234-ff75-47b2-b021-5fa0669ea351" name="iewc-weborder-eapi-subflow" />
+    </flow>
+</mule>

@@ -1,0 +1,31 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  shiP_TO_PARTY:
+    type: object
+    properties:
+      customerNumber:
+        type: string
+        maxLength: 10
+      regio:
+        type: string
+        maxLength: 3
+  materiaL_DETAILS:
+    type: array
+    items:
+      type: object
+      properties:
+        material:
+          type: string
+          maxLength: 18
+        quantity:
+          type: number
+          format: float
+          maximum: 999999999.999
+          minimum: -999999999.999
+        uom:
+          type: string
+          maxLength: 3
+        loosE_ENDS:
+          type: string
+          maxLength: 1

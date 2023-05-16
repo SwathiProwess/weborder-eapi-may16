@@ -1,0 +1,23 @@
+%dw 2.0
+
+type auto_063741fb_3f7d_4959_b914_dc627886a590_Input_Attributes = {|
+  clientCertificate?: {|
+    publicKey?: {|  |}, 
+    "type"?: String, 
+    encoded?: Binary
+  |}, 
+  headers: {| "Accept-Language": String |}, 
+  listenerPath: String, 
+  method: String, 
+  queryParams: {| "sap-client": String |}, 
+  queryString: String, 
+  relativePath: String, 
+  remoteAddress: String, 
+  requestPath: String, 
+  requestUri: String, 
+  scheme: String, 
+  uriParams: {|  |}, 
+  version: String, 
+  localAddress: String
+|}
+

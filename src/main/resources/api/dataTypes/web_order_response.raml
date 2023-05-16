@@ -1,0 +1,57 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  results:
+    type: array
+    items:
+      type: object
+      properties:
+        optioN_NUMBER:
+          type: number
+        defaulT_PLANT:
+          type: string
+          maxLength: 1
+        messageText:
+          type: string
+          maxLength: 200
+        optioN_NUM:
+          type: string
+          maxLength: 2
+        plant:
+          type: string
+          maxLength: 4
+        material:
+          type: string
+          maxLength: 18
+        availablE_QTY:
+          type: string
+          maxLength: 15
+        uom:
+          type: string
+          maxLength: 3
+        text:
+          type: string
+          maxLength: 50
+        estimateD_SHIPING_DATE:
+          type: datetime
+        calendaR_SHIPING_DATE:
+          type: datetime
+        estimateD_SHIPING_DATE_END:
+          type: datetime
+        estimateD_SHIPING_VALID_DATES:
+          type: string
+          maxLength: 500
+        availablE_MESSAGE:
+          type: string
+          maxLength: 50
+  messages:
+    type: array
+    items:
+      type: object
+      properties:
+        type:
+          type: string
+        message:
+          type: string
+  success:
+    type: boolean

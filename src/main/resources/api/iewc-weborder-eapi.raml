@@ -1,0 +1,34 @@
+#%RAML 1.0
+title: iewc-weborder-eapi
+description: This is an Experience API(User facing API) which is exposed as website to the users.
+version: v1
+protocols: [HTTP,HTTPS] 
+mediaType: application/json
+
+types:
+  web_order_request: !include /dataTypes/web_order_request.raml
+  web_order_response: !include /dataTypes/web_order_response.raml
+  error-response: !include /exchange_modules/45fe9fe3-71e9-4c7f-99b4-aade424656d9/common-fragment/1.0.3/errorFiles/error-dataType.raml
+
+securitySchemes: 
+ clientPolicy: !include /exchange_modules/45fe9fe3-71e9-4c7f-99b4-aade424656d9/common-fragment/1.0.3/security/clientEnforcementPolicy.raml
+securedBy:
+  - clientPolicy
+
+/web_order:
+   post:
+    body:
+      application/json:
+        type: web_order_request
+        example: !include /examples/web_order_request.json
+    responses:
+      200:
+        body:
+          application/json:
+            type: web_order_response
+            example: !include /examples/web_order_response.json
+      401:
+        body:
+          application/json:
+            type: error-response
+            example: !include /exchange_modules/45fe9fe3-71e9-4c7f-99b4-aade424656d9/common-fragment/1.0.3/errorFiles/401error-example.json
